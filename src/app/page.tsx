@@ -1,11 +1,9 @@
-import Image from "next/image";
+import Home from "@/components/HomePage";
 
-//expor
-
-export default function Home() {
+export default function Page() {
   return (
    <>
-      Home Static Ui
+      <Home/>
    </>
   );
 }
