@@ -3,20 +3,16 @@
 import { Bell, Sun, Menu, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenuButton } from "./Dropdown"
+import { MobileHeaderProps } from "@/types/header-types"
 
-interface HeaderProps {
-  onMobileMenuClick: () => void
-  title?: string
-  subtitle?: string
-  onAddClick?: () => void
-}
+
 
 export const MobileHeader = ({
   onMobileMenuClick,
   title = "Your Campaigns",
   subtitle = "Welcome Back, Moiz",
   onAddClick,
-}: HeaderProps) => {
+}: MobileHeaderProps) => {
   return (
     <>
       {/* Top nav */}

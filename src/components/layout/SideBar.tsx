@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
+import { SidebarProps } from "@/types/sidebar-types"
 
 const navItems = [
   { icon: Home, label: "Home", href: "/" },
@@ -14,12 +15,7 @@ const navItems = [
   { icon: Settings, label: "Settings", href: "/settings" },
 ]
 
-interface SidebarProps {
-  isMobileOpen: boolean
-  setIsMobileOpen: (value: boolean) => void
-  collapsed: boolean
-  setCollapsed: (value: boolean) => void
-}
+
 
 export const Sidebar = ({ isMobileOpen, setIsMobileOpen, collapsed, setCollapsed }: SidebarProps) => {
   const pathname = usePathname()
@@ -78,8 +74,6 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen, collapsed, setCollapsed
           </Button>
         </div>
       </div>
-
-      {/* Mobile backdrop */}
       {isMobileOpen && (
         <div className="fixed inset-0 bg-black/20 z-30 lg:hidden" onClick={() => setIsMobileOpen(false)} />
       )}

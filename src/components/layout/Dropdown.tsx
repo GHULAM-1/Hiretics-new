@@ -11,11 +11,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Props } from "@/types/dropdown-types"
 
-interface Props {
-  name?: string
-  avatarUrl?: string
-}
+
 
 export function DropdownMenuButton({ name, avatarUrl }: Props) {
   return (

@@ -6,15 +6,8 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { DropdownMenuButton } from "./Dropdown"
+import { HeaderProps } from "@/types/header-types"
 
-interface HeaderProps {
-  title: string
-  subtitle?: string
-  user: {
-    name: string
-    avatarUrl?: string
-  }
-}
 
 export const Header = ({ title, subtitle, user }: HeaderProps) => {
   const { theme, setTheme } = useTheme()
