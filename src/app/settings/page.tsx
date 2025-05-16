@@ -77,7 +77,7 @@ export default function SettingsProfile() {
 
   return (
     <div className="py-[20px] px-[16px]">
-      <div className="flex w-full border-b justify-between items-center py-3 px-6">
+      <div className="flex w-full border-b justify-between items-center py-3 lg:px-6">
         <h1 className="text-[30px] font-semibold">Settings</h1>
         <div className="text-sm text-muted-foreground">
           <span
@@ -89,9 +89,9 @@ export default function SettingsProfile() {
         </div>
       </div>
 
-      <div className="flex">
-        <div className="border-r w-[200px] h-auto">
-          <div className="flex flex-col gap-[16px] py-5 px-4 ">
+      <div className="lg:flex ">
+        <div className="lg:border-r w-full lg:w-[200px] h-auto">
+          <div className="flex lg:flex-col gap-[16px] py-5 px-2 lg:px-4 ">
             <Button className="justify-start bg-[#DCFCE7] text-[#16A34A] text-[16px] font-[500] hover:bg-green-200">
               Profile
             </Button>
@@ -101,9 +101,9 @@ export default function SettingsProfile() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-6 w-full p-6">
+        <div className="flex flex-col gap-6 w-full p-3 lg:p-6">
           <div className="text-[16px] font-[500] mb-4 border-b w-full pb-5">Profile</div>
-          <div className="flex justify-between items-center w-[70%]">
+          <div className="flex lg:flex-row flex-col justify-between items-center lg:w-[70%]">
             <Form {...form} >
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 text-[14px] font-[500] ">
                 <FormField
@@ -142,7 +142,7 @@ export default function SettingsProfile() {
               </form>
             </Form>
 
-            <div className="flex flex-col items-center gap-4 mt-2">
+            <div className="flex flex-col items-center gap-4 mt-4 lg:mt-2">
 
               <Avatar className="w-[104px] h-[104px]">
                 {avatarUrl ? (
