@@ -1,20 +1,19 @@
-'use client'
+"use client";
 
-import { Sidebar } from "@/components/layout/SideBar"
-import { Header } from "@/components/layout/Header"
-import { CardComponent } from "@/components/DynamicCard"
-import { useState } from "react"
-import { MobileHeader } from "./layout/MobileHeader"
+import { Sidebar } from "@/components/layout/SideBar";
+import { Header } from "@/components/layout/Header";
+import { CardComponent } from "@/components/campaign-creation/DynamicCard";
+import { useState } from "react";
+import { MobileHeader } from "./layout/MobileHeader";
 
 export default function Home() {
-  const [isMobileOpen, setIsMobileOpen] = useState(false)
-  const [collapsed, setCollapsed] = useState(false)
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
     <div className="w-full bg-muted/20">
-      {/* Outer container with max width and centered content */}
       <div className="max-w-[1440px] mx-auto flex px-0 lg:px-6 lg:pt-6 pt-2">
-        {/* Sidebar section */}
         <div className="border-[#E4E4E7] border-[1px] shadow-md rounded-[6px] h-screen">
           <Sidebar
             isMobileOpen={isMobileOpen}
@@ -24,7 +23,6 @@ export default function Home() {
           />
         </div>
 
-     
         <div className="flex-1 flex flex-col">
           <MobileHeader
             onMobileMenuClick={() => setIsMobileOpen(true)}
@@ -42,8 +40,9 @@ export default function Home() {
               <CardComponent
                 className="lg:flex hidden"
                 variant="create"
-                onClick={() => console.log("Create a Campaign clicked")}
+                onClick={() => setDialogOpen(true)}
               />
+
               <CardComponent
                 title="Web Developer"
                 status="ongoing"
@@ -60,6 +59,11 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* <Dialouge
+        open={dialogOpen}
+        onOpenChange={(open) => setDialogOpen(open)}
+      /> */}
     </div>
-  )
+  );
 }

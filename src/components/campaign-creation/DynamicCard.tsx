@@ -7,6 +7,7 @@ import { CheckCircle, Loader2, MoreVertical } from "lucide-react"
 import { CardComponentProps } from "@/types/card-types"
 import { Plus ,Star} from "lucide-react"
 
+
 const CardStatusIcon = ({ status }: { status: "completed" | "ongoing" }) => {
     if (status === "completed") {
       return <CheckCircle size={14} className="text-green-600" />
