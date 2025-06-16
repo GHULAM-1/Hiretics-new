@@ -67,10 +67,10 @@ export default function LoginForm({ onSubmit }: LoginFormProps) {
             data.user.email ?? null,
             data.user.user_metadata?.full_name ?? null
           );
-          // Store in localStorage
           localStorage.setItem(
             "user",
             JSON.stringify({
+              id: data.user.id ?? null,
               email: data.user.email ?? null,
               displayName: data.user.user_metadata?.full_name ?? null,
             })
