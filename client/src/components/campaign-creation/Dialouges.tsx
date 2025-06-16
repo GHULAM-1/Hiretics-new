@@ -204,7 +204,9 @@ export default function CreateCampaign({
 
   return (
     <div className="p-6">
-      <CardComponent className="lg:flex hidden" variant="create" />
+      {!editMode && (
+        <CardComponent className="lg:flex hidden" variant="create" />
+      )}
 
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-md p-6 bg-white rounded-lg shadow-lg">

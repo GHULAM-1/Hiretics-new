@@ -6,6 +6,8 @@ import { Upload } from "lucide-react"
 import { useEffect, useState, useRef } from "react"
 import { getCampaign } from "@/api/campaign/api"
 import { Campaign } from "@/types/campaign"
+import { uploadCV } from "@/api/cv/api"
+import { toast } from "sonner"
 
 interface ApplicantsProps {
   title?: string
@@ -20,18 +22,27 @@ export default function Applicants({
 }: ApplicantsProps) {
   const [campaign, setCampaign] = useState<Campaign | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [uploading, setUploading] = useState(false)
 
   const handleUploadCV = () => {
     fileInputRef.current?.click()
   }
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) {
-      // Handle file upload logic here
-      console.log("Selected file:", file)
+    if (file && campaign?.id) {
+      setUploading(true)
+      try {
+        await uploadCV({ campaignId: campaign.id, file })
+        toast.success("CV uploaded successfully")
+      } catch (error) {
+        toast.error("Failed to upload CV")
+      } finally {
+        setUploading(false)
+      }
     }
   }
+
 
   useEffect(() => {
     if (id) {
@@ -83,8 +94,16 @@ export default function Applicants({
             <Button
               onClick={handleUploadCV}
               className="w-full bg-black hover:cursor-pointer hover:bg-gray-800 text-white py-3 text-base font-medium"
+              disabled={uploading}
             >
-              <Upload className="w-4 h-4 mr-2" />
+              {uploading ? (
+                <svg className="animate-spin h-4 w-4 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                </svg>
+              ) : (
+                <Upload className="w-4 h-4 mr-2" />
+              )}
               Upload CV
             </Button>
             <p className="text-xs text-gray-500 text-center">list of supported CV formats</p>

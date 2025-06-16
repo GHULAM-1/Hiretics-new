@@ -34,6 +34,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import CreateCampaign from "@/components/campaign-creation/Dialouges";
+import { CountCards } from "./cards";
+import { BestCandidates, Candidate } from "./best-candidate";
+import { getApplicants } from "@/api/cv/api";
+import { differenceInCalendarDays, isAfter, parseISO } from "date-fns"
+
 interface CampaignPageProps {
   id: string;
 }
@@ -42,6 +47,7 @@ export default function CampaignPage({ id }: CampaignPageProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [campaign, setCampaign] = useState<Campaign | null>(null);
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [showArchiveDialog, setShowArchiveDialog] = useState(false);
   const [isArchiving, setIsArchiving] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -54,6 +60,13 @@ export default function CampaignPage({ id }: CampaignPageProps) {
     }
   }, [id]);
 
+  useEffect(() => {
+    if (campaign?.id) {
+      getApplicants(campaign.id)
+        .then(setCandidates)
+        .catch(console.error)
+    }
+  }, [campaign?.id])
   const handleArchive = async () => {
     if (!campaign?.id || !campaign) return;
 
@@ -157,7 +170,6 @@ export default function CampaignPage({ id }: CampaignPageProps) {
                       {campaign.status}
                     </span>
                   </div>
-
                   {/* Action Buttons */}
                   <div className="flex items-center space-x-2">
                     <button
@@ -198,6 +210,44 @@ export default function CampaignPage({ id }: CampaignPageProps) {
                       Share
                     </button>
                   </div>
+                </div>
+                <hr className="border-[#E4E4E7] my-5" />
+
+                <div className="flex justify-between gap-4">
+                  {/* Calculate days remaining */}
+                  {(() => {
+                    let daysRemaining = 0;
+                    if (campaign.start_date && campaign.end_date) {
+                      const today = new Date();
+                      const end = parseISO(campaign.end_date);
+                      if (isAfter(today, end)) {
+                        daysRemaining = 0;
+                      } else {
+                        daysRemaining = differenceInCalendarDays(end, today);
+                        if (daysRemaining < 0) daysRemaining = 0;
+                      }
+                    }
+                    return (
+                      <CountCards
+                        responsesReceived={candidates.length}
+                        daysRemaining={daysRemaining}
+                        onViewAsApplicant={() => {
+                          // Handle view as applicant
+                          const url = `http://localhost:3000/campaign/applicants/${campaign?.id}`;
+                          window.open(url, "_blank");
+                        }}
+                      />
+                    );
+                  })()}
+
+                  {/* Best Candidates */}
+                  <BestCandidates
+                    campaignId={campaign?.id}
+                    onLoadMore={() => {
+                      // Handle load more candidates
+                      console.log("Load more candidates");
+                    }}
+                  />
                 </div>
               </div>
             ) : (
