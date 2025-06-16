@@ -1,0 +1,72 @@
+{
+  "info": {
+    "name": "Analytics Service API",
+    "description": "Collection for testing the Analytics Service endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3003",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": ["{{baseUrl}}"],
+          "path": [""]
+        },
+        "description": "Basic health check endpoint"
+      },
+      "response": []
+    },
+    {
+      "name": "Age Analytics",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/analytics/age",
+          "host": ["{{baseUrl}}"],
+          "path": ["analytics", "age"]
+        },
+        "description": "Get age distribution statistics from applicants"
+      },
+      "response": []
+    },
+    {
+      "name": "University Analytics",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/analytics/university",
+          "host": ["{{baseUrl}}"],
+          "path": ["analytics", "university"]
+        },
+        "description": "Get university distribution statistics from applicants"
+      },
+      "response": []
+    },
+    {
+      "name": "City Analytics",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/analytics/city",
+          "host": ["{{baseUrl}}"],
+          "path": ["analytics", "city"]
+        },
+        "description": "Get city distribution statistics with percentages from applicants"
+      },
+      "response": []
+    }
+  ]
+} 

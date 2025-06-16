@@ -1,0 +1,197 @@
+{
+  "info": {
+    "name": "Subscription Service API",
+    "description": "Complete API collection for testing the subscription service",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3004",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Subscription",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": \"user_123\",\n  \"plan\": \"premium\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/subs",
+          "host": ["{{baseUrl}}"],
+          "path": ["subs"]
+        },
+        "description": "Creates a new subscription for a user"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"user_123\",\n  \"plan\": \"premium\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/subs",
+              "host": ["{{baseUrl}}"],
+              "path": ["subs"]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"message\": \"Subscription created\",\n  \"user_id\": \"user_123\",\n  \"plan\": \"premium\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get Subscription",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/subs?user_id=user_123",
+          "host": ["{{baseUrl}}"],
+          "path": ["subs"],
+          "query": [
+            {
+              "key": "user_id",
+              "value": "user_123",
+              "description": "The ID of the user whose subscription to retrieve"
+            }
+          ]
+        },
+        "description": "Retrieves subscription details for a specific user"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/subs?user_id=user_123",
+              "host": ["{{baseUrl}}"],
+              "path": ["subs"],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "user_123"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"user_id\": \"user_123\",\n  \"plan\": \"premium\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Update Subscription",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"user_id\": \"user_123\",\n  \"plan\": \"enterprise\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/subs",
+          "host": ["{{baseUrl}}"],
+          "path": ["subs"]
+        },
+        "description": "Updates an existing subscription plan for a user"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"user_123\",\n  \"plan\": \"enterprise\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/subs",
+              "host": ["{{baseUrl}}"],
+              "path": ["subs"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"message\": \"Subscription updated\",\n  \"user_id\": \"user_123\",\n  \"plan\": \"enterprise\"\n}"
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+} 
