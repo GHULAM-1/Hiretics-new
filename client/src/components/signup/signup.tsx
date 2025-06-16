@@ -75,6 +75,8 @@ export default function SignupForm({ onSubmit }: SignupFormProps) {
           throw signUpError
         }
 
+        // 
+
         if (data?.user) {
           toast.success("Account created! Please check your email to verify.")
           router.push('/signin')
