@@ -13,14 +13,16 @@ function isPublicRoute(path: string) {
   return PUBLIC_ROUTES.some((regex) => regex.test(path));
 }
 
-export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
+export default function ProtectedRoute({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
 
-
-  
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,9 +39,10 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
       if (session && session.user) {
         const email = session.user.email ?? null;
         const displayName = session.user.user_metadata?.full_name ?? null;
+        const id = session.user.id ?? null;
         localStorage.setItem(
           "user",
-          JSON.stringify({ email, displayName })
+          JSON.stringify({ email, displayName, id })
         );
       }
       setLoading(false);
@@ -48,4 +51,4 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
 
   if (loading) return <div>Loading...</div>;
   return <>{children}</>;
-} 
+}
