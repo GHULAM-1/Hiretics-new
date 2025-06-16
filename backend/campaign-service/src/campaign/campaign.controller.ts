@@ -6,6 +6,7 @@ import {
   Body,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CampaignService, Campaign } from './campaign.service';
 import { CreateCampaignDto } from './dto/create-campaign.dto';
@@ -21,8 +22,12 @@ export class CampaignController {
   }
 
   @Get()
-  findAll(): Promise<Campaign[]> {
-    return this.campaignService.findAll();
+  findAll(@Query('is_archived') isArchived?: boolean): Promise<Campaign[]> {
+    return this.campaignService.findAll(isArchived);
+  }
+  @Get('favourite')
+  findAllFavourite(): Promise<Campaign[]> {
+    return this.campaignService.findAllFavourite();
   }
 
   @Get(':id')

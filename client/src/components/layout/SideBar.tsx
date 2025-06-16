@@ -4,9 +4,11 @@ import { Home, Star, Trash, Settings, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
 import { SidebarProps } from "@/types/sidebar-types"
+import { toast } from "sonner"
+import { supabase } from "@/lib/supabase"
 
 const navItems = [
   { icon: Home, label: "Home", href: "/" },
@@ -15,10 +17,16 @@ const navItems = [
   { icon: Settings, label: "Settings", href: "/settings" },
 ]
 
-
-
 export const Sidebar = ({ isMobileOpen, setIsMobileOpen, collapsed, setCollapsed }: SidebarProps) => {
   const pathname = usePathname()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    console.log("Logging out...")
+    await supabase.auth.signOut()
+    toast.success("Logged out successfully!")
+    router.replace("/signin")
+  }
 
   return (
     <>
@@ -46,7 +54,7 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen, collapsed, setCollapsed
                   <Button
                     variant="ghost"
                     className={cn(
-                      "flex items-center gap-3 w-full justify-start text-sm",
+                      "flex items-center gap-3 w-full hover:cursor-pointer justify-start text-sm",
                       isActive && "bg-[#DCFCE7] text-[#16A34A]",
                       collapsed && "justify-center px-0"
                     )}
@@ -68,6 +76,7 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen, collapsed, setCollapsed
           <Button
             variant="ghost"
             className={cn("text-gray-600 w-full justify-start", collapsed && "w-10 p-0 justify-center")}
+            onClick={handleLogout}
           >
             <LogOut size={20} />
             {!collapsed && <span className="ml-2">Logout</span>}

@@ -31,4 +31,12 @@ export class CreateCampaignDto {
   @IsOptional()
   @IsBoolean()
   is_archived?: boolean;
+
+  @IsOptional()
+  @IsString()
+  start_date?: string;
+
+  @IsOptional()
+  @IsString()
+  end_date?: string;
 }

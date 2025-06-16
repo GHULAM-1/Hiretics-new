@@ -3,13 +3,32 @@
 import { Sidebar } from "@/components/layout/SideBar";
 import { Header } from "@/components/layout/Header";
 import { CardComponent } from "@/components/campaign-creation/DynamicCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MobileHeader } from "./layout/MobileHeader";
+import CreateCampaign from "./campaign-creation/Dialouges";
+import { getCampaigns, favoriteCampaign } from "@/api/campaign/api";
+import { Campaign } from "@/types/campaign";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+const fetchCampaigns = () => {
+    setIsLoading(true);
+    getCampaigns(false)
+      .then(setCampaigns)
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    fetchCampaigns();
+  }, []);
 
   return (
     <div className="w-full bg-muted/20">
@@ -27,6 +46,7 @@ export default function Home() {
           <MobileHeader
             onMobileMenuClick={() => setIsMobileOpen(true)}
             title="Your Campaigns"
+            onAddClick={() => setDialogOpen(true)}
           />
 
           <Header
@@ -43,27 +63,48 @@ export default function Home() {
                 onClick={() => setDialogOpen(true)}
               />
 
-              <CardComponent
-                title="Web Developer"
-                status="ongoing"
-                username="BitProwler"
-                count={141}
-              />
-              <CardComponent
-                title="Web Developer"
-                status="completed"
-                username="BitProwler"
-                count={141}
-              />
+              {isLoading ? (
+                // Show 6 skeleton cards while loading
+                Array.from({ length: 6 }).map((_, idx) => (
+                  <CardComponent
+                    key={`skeleton-${idx}`}
+                    variant="skeleton"
+                  />
+                ))
+              ) : (
+                campaigns.map((campaign) => {
+                  let status: "ongoing" | "completed" | "archived" | "not-started" | undefined = undefined;
+                  if (campaign.status === "ongoing" || campaign.status === "completed" || campaign.status === "archived" || campaign.status === "not-started") {
+                    status = campaign.status;
+                  }
+                  return (
+                    <CardComponent
+                      key={campaign.id}
+                      title={campaign.name}
+                      status={status}
+                      isFavorite={campaign.is_favorite}
+                      username={campaign.company_name}
+                      count={141}
+                      onClick={() => router.push(`/campaign/${campaign.id}`)}
+                      onFavorite={async () => {
+                        if (!campaign.id) return;
+                        await favoriteCampaign(String(campaign.id), !campaign.is_favorite);
+                        fetchCampaigns();
+                      }}
+                    />
+                  );
+                })
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* <Dialouge
+      <CreateCampaign
         open={dialogOpen}
+        onCreated={fetchCampaigns}
         onOpenChange={(open) => setDialogOpen(open)}
-      /> */}
+      />
     </div>
   );
 }

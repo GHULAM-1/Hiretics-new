@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { supabase } from "@/lib/supabase"
+import { toast } from "sonner"
 
 interface SignupFormProps {
   onSubmit?: (name: string, email: string, password: string) => Promise<void>
@@ -75,7 +76,8 @@ export default function SignupForm({ onSubmit }: SignupFormProps) {
         }
 
         if (data?.user) {
-          router.push('/dashboard')
+          toast.success("Account created! Please check your email to verify.")
+          router.push('/signin')
         }
       }
     } catch (err: any) {

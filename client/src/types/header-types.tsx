@@ -12,4 +12,5 @@ export type HeaderProps= {
     title?: string
     subtitle?: string
     onAddClick?: () => void
+    button?: boolean
   }

@@ -9,6 +9,7 @@ import { MobileHeaderProps } from "@/types/header-types"
 
 export const MobileHeader = ({
   onMobileMenuClick,
+  button = true,
   title = "Your Campaigns",
   subtitle = "Welcome Back, Moiz",
   onAddClick,
@@ -36,13 +37,15 @@ export const MobileHeader = ({
           <h2 className="text-lg font-semibold">{title}</h2>
           <p className="text-sm text-muted-foreground">{subtitle}</p>
         </div>
-        <Button
-          size="icon"
-          className="bg-[#16A34A] hover:bg-[#15803D] text-white rounded-full shadow"
-          onClick={onAddClick}
-        >
-          <Plus size={20} />
-        </Button>
+        {button && (
+          <Button
+            size="icon"
+            className="bg-[#16A34A] hover:bg-[#15803D] text-white rounded-full shadow"
+            onClick={onAddClick}
+          >
+            <Plus size={20} />
+          </Button>
+        )}
       </div>
     </>
   )

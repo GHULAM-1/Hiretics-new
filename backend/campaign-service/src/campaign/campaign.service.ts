@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { supabase } from '../supabase.client';
 import { CreateCampaignDto } from './dto/create-campaign.dto';
 import { UpdateCampaignDto } from './dto/update-campaign.dto';
+import { format } from 'date-fns';
 
 export interface Campaign {
   id: string;
@@ -28,8 +29,36 @@ export class CampaignService {
     return data as Campaign;
   }
 
-  async findAll(): Promise<Campaign[]> {
-    const { data, error } = await supabase.from('campaigns').select('*');
+  async updateCampaignStatuses() {
+    const today = format(new Date(), 'yyyy-MM-dd');
+    const { data: campaigns, error } = await supabase.from('campaigns').select('*');
+    if (error) throw error;
+    for (const campaign of campaigns) {
+      let newStatus = campaign.status;
+      if (campaign.start_date && campaign.end_date) {
+        if (today < campaign.start_date) newStatus = 'not-started';
+        else if (today > campaign.end_date) newStatus = 'completed';
+        else newStatus = 'ongoing';
+      }
+      if (newStatus !== campaign.status) {
+        await supabase.from('campaigns').update({ status: newStatus }).eq('id', campaign.id);
+      }
+    }
+  }
+
+  async findAll(isArchived?: boolean): Promise<Campaign[]> {
+    await this.updateCampaignStatuses();
+    const { data, error } = await supabase.from('campaigns').select('*').eq('is_archived', isArchived);
+    if (error) throw error;
+    return data as Campaign[];
+  }
+  async findAllFavourite(): Promise<Campaign[]> {
+    await this.updateCampaignStatuses();
+    const { data, error } = await supabase
+      .from('campaigns')
+      .select('*')
+      .eq('is_favorite', true)
+      .eq('is_archived', false);
     if (error) throw error;
     return data as Campaign[];
   }
@@ -45,6 +74,7 @@ export class CampaignService {
   }
 
   async update(id: string, dto: UpdateCampaignDto): Promise<Campaign> {
+    // 1. Update the campaign
     const { data, error } = await supabase
       .from('campaigns')
       .update({ ...dto, updated_at: new Date().toISOString() })
@@ -52,6 +82,26 @@ export class CampaignService {
       .select()
       .single();
     if (error) throw error;
+
+    // 2. Update the status for this campaign (not all campaigns)
+    const today = format(new Date(), 'yyyy-MM-dd');
+    let newStatus = data.status;
+    if (data.start_date && data.end_date) {
+      if (today < data.start_date) newStatus = 'not-started';
+      else if (today > data.end_date) newStatus = 'completed';
+      else newStatus = 'ongoing';
+    }
+    if (newStatus !== data.status) {
+      const { data: updated } = await supabase
+        .from('campaigns')
+        .update({ status: newStatus })
+        .eq('id', id)
+        .select()
+        .single();
+      return updated as Campaign;
+    }
+
+    // 3. Return the updated campaign
     return data as Campaign;
   }
 

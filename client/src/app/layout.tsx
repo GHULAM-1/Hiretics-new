@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ClientRoot } from "@/app/client-root/ClientRoot"; 
-
+import { ClientRoot } from "@/app/client-root/ClientRoot";
+import { Toaster } from "sonner";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-          <ClientRoot>{children}</ClientRoot>
+        <Toaster richColors position="top-center" />
+        <ClientRoot>
+          <ProtectedRoute>{children}</ProtectedRoute>
+        </ClientRoot>
       </body>
     </html>
   );
