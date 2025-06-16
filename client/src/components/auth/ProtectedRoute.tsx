@@ -5,6 +5,9 @@ import { supabase } from "@/lib/supabase";
 
 const PUBLIC_ROUTES = [
   /^\/campaign\/applicants\/[^/]+$/, // Regex for /campaign/applicants/[id]
+  /^\/signin$/, // Signin page
+  /^\/signup$/, // Signup page
+  
   // Add more public route patterns here if needed
 ];
 
