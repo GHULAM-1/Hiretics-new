@@ -35,7 +35,11 @@ import { useUserStore } from "@/store/userStore"
       <div className="hidden lg:flex items-center  justify-between w-full px-6 py-4 border-b  bg-white">
         <div >
           <h2 className="text-2xl font-semibold">{title}</h2>
-          {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
+          {subtitle && (
+            <p className="text-sm text-muted-foreground">
+              {`Welcome, ${name.charAt(0).toUpperCase()}${name.slice(1)}`}
+            </p>
+          )}
         </div>
         <div className="flex items-center gap-4">
           <Button variant="default" size="icon" onClick={toggleTheme} className="border hover:cursor-pointer border-[#E4E4E7] rounded-[6px] ">

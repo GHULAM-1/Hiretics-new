@@ -31,8 +31,8 @@ export function DropdownMenuButton({ name, avatarUrl }: Props) {
       <DropdownMenuTrigger asChild>
         <div  className="flex gap-3 rounded-[6px] items-center p-2 border-[#E4E4E7] border hover:cursor-pointer ">
           <Avatar className="h-[30px] w-[30px] self-center ">
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={avatarUrl} alt="@shadcn" />
+          <AvatarFallback>{name?.charAt(0)?.toUpperCase()}</AvatarFallback>
         </Avatar>
           <span className="font-medium lg:flex hidden text-sm">{name}</span>
         </div>

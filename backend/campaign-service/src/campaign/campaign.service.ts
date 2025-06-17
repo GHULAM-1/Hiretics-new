@@ -31,24 +31,38 @@ export class CampaignService {
 
   async updateCampaignStatuses() {
     const today = format(new Date(), 'yyyy-MM-dd');
-    const { data: campaigns, error } = await supabase.from('campaigns').select('*');
+    const { data: campaigns, error } = await supabase
+      .from('campaigns')
+      .select('*');
     if (error) throw error;
     for (const campaign of campaigns) {
       let newStatus = campaign.status;
       if (campaign.start_date && campaign.end_date) {
-        if (today < campaign.start_date) newStatus = 'not-started';
-        else if (today > campaign.end_date) newStatus = 'completed';
-        else newStatus = 'ongoing';
+        const startDate = format(new Date(campaign.start_date), 'yyyy-MM-dd');
+        const endDate = format(new Date(campaign.end_date), 'yyyy-MM-dd');
+        if (endDate < today) {
+          newStatus = 'completed';
+        } else if (startDate <= today) {
+          newStatus = 'ongoing';
+        } else {
+          newStatus = 'not-started';
+        }
       }
       if (newStatus !== campaign.status) {
-        await supabase.from('campaigns').update({ status: newStatus }).eq('id', campaign.id);
+        await supabase
+          .from('campaigns')
+          .update({ status: newStatus })
+          .eq('id', campaign.id);
       }
     }
   }
 
   async findAll(isArchived?: boolean): Promise<Campaign[]> {
     await this.updateCampaignStatuses();
-    const { data, error } = await supabase.from('campaigns').select('*').eq('is_archived', isArchived);
+    const { data, error } = await supabase
+      .from('campaigns')
+      .select('*')
+      .eq('is_archived', isArchived);
     if (error) throw error;
     return data as Campaign[];
   }
@@ -87,9 +101,15 @@ export class CampaignService {
     const today = format(new Date(), 'yyyy-MM-dd');
     let newStatus = data.status;
     if (data.start_date && data.end_date) {
-      if (today < data.start_date) newStatus = 'not-started';
-      else if (today > data.end_date) newStatus = 'completed';
-      else newStatus = 'ongoing';
+      const startDate = format(new Date(data.start_date), 'yyyy-MM-dd');
+      const endDate = format(new Date(data.end_date), 'yyyy-MM-dd');
+      if (endDate < today) {
+        newStatus = 'completed';
+      } else if (startDate <= today) {
+        newStatus = 'ongoing';
+      } else {
+        newStatus = 'not-started';
+      }
     }
     if (newStatus !== data.status) {
       const { data: updated } = await supabase

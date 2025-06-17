@@ -204,15 +204,15 @@ export default function CreateCampaign({
 
   return (
     <div className="p-6">
-      {!editMode && (
+      {/* {!editMode && (
         <CardComponent className="lg:flex hidden" variant="create" />
-      )}
+      )} */}
 
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-md p-6 bg-white rounded-lg shadow-lg">
           <DialogHeader className="pb-4">
             <DialogTitle className="text-xl font-semibold text-primary">
-              Create Campaign
+              {editMode ? "Edit Campaign" : "Create Campaign"}
             </DialogTitle>
             <p className="text-sm text-gray-500 mt-1">
               {step === 1
@@ -408,7 +408,7 @@ export default function CreateCampaign({
                 else if (step === 2) handleBack();
                 else if (step === 3) handleClose();
               }}
-              className="px-6"
+              className="px-6 cursor-pointer"
             >
               {step === 1 ? "Cancel" : step === 2 ? "Back" : "Close"}
             </Button>
@@ -418,7 +418,7 @@ export default function CreateCampaign({
                   if (step === 1) handleNext();
                   else if (step === 2) handleCreateOrSave();
                 }}
-                className="bg-[#16A34A] text-white hover:bg-[#16A34A]/80 px-6"
+                className="bg-[#16A34A] text-white hover:bg-[#16A34A]/80 px-6 cursor-pointer"
                 disabled={isLoading}
               >
                 {isLoading && step === 2 ? (

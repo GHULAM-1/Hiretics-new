@@ -50,7 +50,7 @@ export function BestCandidates({
         <div className="space-y-4">
           {loading ? (
             Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="flex items-center justify-between py-2">
+              <div key={i} className="flex items-center w-full min-w-[300px] justify-between py-2">
                 <div className="flex items-center space-x-3">
                   <Skeleton className="h-10 w-10 rounded-full" />
                   <div>

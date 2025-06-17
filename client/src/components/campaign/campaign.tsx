@@ -176,19 +176,19 @@ export default function CampaignPage({ id }: CampaignPageProps) {
                       className="p-2 border-[1px] hover:bg-gray-100 rounded-md"
                       onClick={() => setShowArchiveDialog(true)}
                     >
-                      <Trash2 className="w-5 h-5 text-[#DC2626]" />
+                      <Trash2 className="w-5 h-5 hover:cursor-pointer text-[#DC2626]" />
                     </button>
                     <button
                       className="p-2 border-[1px] hover:bg-gray-100 rounded-md"
                       onClick={handleEdit}
                     >
-                      <Pen className="w-5 h-5 text-gray-600" />
+                      <Pen className="w-5 h-5 hover:cursor-pointer text-gray-600" />
                     </button>
                     <button
                       className="p-2 border-[1px] hover:bg-gray-100 rounded-md"
                       onClick={handleCopyLink}
                     >
-                      <Link2 className="w-5 h-5 text-gray-600" />
+                      <Link2 className="w-5 h-5 hover:cursor-pointer text-gray-600" />
                     </button>
                     <button
                       className="p-2 border-[1px] hover:bg-gray-100 rounded-md"
@@ -197,14 +197,14 @@ export default function CampaignPage({ id }: CampaignPageProps) {
                       <Star
                         className={
                           campaign?.is_favorite
-                            ? "w-5 h-5 text-yellow-400 fill-yellow-400"
-                            : "w-5 h-5 text-gray-600"
+                            ? "w-5 h-5 hover:cursor-pointer text-yellow-400 fill-yellow-400"
+                            : "w-5 h-5 hover:cursor-pointer text-gray-600"
                         }
                         fill={campaign?.is_favorite ? "currentColor" : "none"}
                       />
                     </button>
                     <button
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium flex items-center gap-2"
+                      className="px-4 py-2 bg-blue-600 hover:cursor-pointer text-white rounded-md hover:bg-blue-700 font-medium flex items-center gap-2"
                       onClick={handleCopyLink}
                     >
                       Share

@@ -1,6 +1,5 @@
 "use client";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BreadcrumbDemo } from "./BreadCrums";
 import {
   LineChart,
@@ -22,96 +21,142 @@ import {
 } from "@/components/ui/select";
 import { Progress } from "../ui/progress";
 import { Button } from "../ui/button";
+import axios from "axios";
+import Link from "next/link";
 
-const lineData1 = [
-  { name: "MON", value: 1000 },
-  { name: "TUE", value: 1200 },
-  { name: "WED", value: 4500 },
-  { name: "THU", value: 1300 },
-  { name: "FRI", value: 2000 },
-  { name: "SAT", value: 3500 },
-  { name: "SUN", value: 2800 },
-];
+interface AgeDataItem {
+  age: number;
+  count: number;
+}
 
-const lineData2 = [
-  { name: "MON", value: 800 },
-  { name: "TUE", value: 1900 },
-  { name: "WED", value: 2100 },
-  { name: "THU", value: 3400 },
-  { name: "FRI", value: 1800 },
-  { name: "SAT", value: 3900 },
-  { name: "SUN", value: 2400 },
-];
+interface UniversityDataItem {
+  university: string;
+  count: number;
+}
 
-const pieData1 = [
-  { name: "Label 1", value: 48.8 },
-  { name: "Label 2", value: 24.3 },
-  { name: "Label 3", value: 14.6 },
-  { name: "Label 4", value: 12.3 },
-];
-
-const pieData2 = [
-  { name: "Label 1", value: 40 },
-  { name: "Label 2", value: 30 },
-  { name: "Label 3", value: 20 },
-  { name: "Label 4", value: 10 },
-];
+interface CityDataItem {
+  city: string;
+  percentage: string;
+}
 
 const colors = ["#22c55e", "#86efac", "#bbf7d0", "#dcfce7"];
 
-const educationData = [
-  { label: "ITU", value: 85 },
-  { label: "FAST", value: 75 },
-  { label: "UMT", value: 65 },
-  { label: "GIKI", value: 60 },
-  { label: "Cambridge", value: 50 },
-  { label: "NUST", value: 70 },
-  { label: "KIPS", value: 45 },
-  { label: "UCP", value: 80 },
-  { label: "Label 1", value: 66 },
-];
-
 export default function AnalyticsMainSection() {
-  const [selectedLine, setSelectedLine] = useState("line1");
-  const [selectedPie, setSelectedPie] = useState("opt1");
+  const [selectedLine, setSelectedLine] = useState("age");
+  const [selectedPie, setSelectedPie] = useState("city");
+  const [ageData, setAgeData] = useState<AgeDataItem[]>([]);
+  const [cityData, setCityData] = useState<CityDataItem[]>([]);
+  const [isUserSubscribed, setIsUserSubscribed] = useState(false);
+  const storedUser = localStorage.getItem("user");
+  const user = JSON.parse(storedUser || "{}");
+  const [universityData, setUniversityData] = useState<UniversityDataItem[]>(
+    []
+  );
 
-  const currentLineData = selectedLine === "line1" ? lineData1 : lineData2;
-  const currentPieData = selectedPie === "opt1" ? pieData1 : pieData2;
+  const transformedAgeData = ageData.map((item) => ({
+    name: item.age?.toString() || "",
+    value: item.count || 0,
+  }));
+
+  const transformedUniversityData = universityData.map((item) => ({
+    label: item.university || "",
+    value: item.count || 0,
+  }));
+
+  const transformedCityData = cityData.map((item) => ({
+    name: item.city || "",
+    value: parseFloat(item.percentage) || 0,
+  }));
+
+  const currentLineData = transformedAgeData;
+  const currentPieData = transformedCityData;
+
+  const getUserSubscription = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL_SUBSCRIPTION}/subs?user_id=${user.id}`
+      );
+      if (response.data.plan === "free") {
+        setIsUserSubscribed(false);
+      } else {
+        setIsUserSubscribed(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUserSubscription();
+  }, []);
+
+  const getAgeData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL_ANALYTICS}/analytics/age`
+      );
+      setAgeData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getCityData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL_ANALYTICS}/analytics/city`
+      );
+      setCityData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getUniversityData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL_ANALYTICS}/analytics/university`
+      );
+      setUniversityData(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAgeData();
+    getCityData();
+    getUniversityData();
+  }, []);
 
   return (
-    <div className="p-6">
+    <div className="p-6 relative">
+      {!isUserSubscribed && (
+        <div className="absolute top-0 right-0 w-full h-full flex flex-col items-center pt-32 z-10 backdrop-blur-md">
+          <h2 className="text-2xl font-semibold mb-4 text-center ">
+            Subscribe to Pro
+          </h2>
+          <p className="text-lg text-gray-600 mb-4 text-center max-w-md">
+            Subscribe to Pro to get access to all features.
+          </p>
+          <Link href="/pricing">
+            <Button className="bg-[#16A34A] text-white">Subscribe</Button>
+          </Link>
+        </div>
+      )}
       <BreadcrumbDemo />
       <h1 className="text-2xl font-semibold pt-8 pb-6">Campaign Analytics</h1>
-
-      {/* Line Chart */}
       <div className="bg-white rounded-[6px] p-4 border shadow-sm">
         <div className="flex justify-between items-center mb-4">
           <div className="flex gap-2">
-            <Button
-              size="sm"
-              className={`${
-                selectedLine === "line1" ? "bg-[#16A34A] text-white" : "bg-[#F0FDF4]"
-              }`}
-              onClick={() => setSelectedLine("line1")}
-            >
-              Line 1
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              className={selectedLine === "line2" ? "bg-[#16A34A] text-white" : "bg-[#F0FDF4]"}
-              onClick={() => setSelectedLine("line2")}
-            >
-              Line 2
+            <Button size="sm" className="bg-[#16A34A] text-white">
+              Age Distribution
             </Button>
           </div>
           <Select value={selectedLine} onValueChange={setSelectedLine}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a line" />
+              <SelectValue placeholder="Select data" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="line1">Line 1</SelectItem>
-              <SelectItem value="line2">Line 2</SelectItem>
+              <SelectItem value="age">Age Distribution</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -130,13 +175,11 @@ export default function AnalyticsMainSection() {
         </ResponsiveContainer>
       </div>
 
-    
       <div className="md:flex w-full gap-4">
-      
         <div className="mt-6 bg-white w-full p-6 rounded-lg border shadow-sm">
           <h2 className="text-lg font-semibold mb-4">Educational Background</h2>
           <div className="space-y-3">
-            {educationData.map((edu, idx) => (
+            {transformedUniversityData.map((edu, idx) => (
               <div key={idx}>
                 <div className="text-sm font-medium">{edu.label}</div>
                 <Progress
@@ -152,11 +195,10 @@ export default function AnalyticsMainSection() {
           <div className="flex mb-4">
             <Select value={selectedPie} onValueChange={setSelectedPie}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select an option" />
+                <SelectValue placeholder="Select data" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="opt1">Option A</SelectItem>
-                <SelectItem value="opt2">Option B</SelectItem>
+                <SelectItem value="city">City Distribution</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -171,14 +213,23 @@ export default function AnalyticsMainSection() {
                 innerRadius={50}
                 paddingAngle={0}
                 labelLine={false}
-                label={({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+                label={({
+                  cx,
+                  cy,
+                  midAngle,
+                  innerRadius,
+                  outerRadius,
+                  percent,
+                  index,
+                }) => {
                   const RADIAN = Math.PI / 180;
-                  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+                  const radius =
+                    innerRadius + (outerRadius - innerRadius) * 0.5;
                   const x = cx + radius * Math.cos(-midAngle * RADIAN);
                   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
                   const percentage = `${(percent * 100).toFixed(1)}%`;
-                  const label = currentPieData[index].name;
+                  const label = currentPieData[index]?.name || "";
 
                   const labelColor = index < 2 ? "#ffffff" : "#22c55e";
 

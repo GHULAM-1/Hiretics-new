@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClientRoot } from "@/app/client-root/ClientRoot";
 import { Toaster } from "sonner";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import NextTopLoader from "nextjs-toploader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,7 +33,10 @@ export default function RootLayout({
       >
         <Toaster richColors position="top-center" />
         <ClientRoot>
-          <ProtectedRoute>{children}</ProtectedRoute>
+          <ProtectedRoute>
+            <NextTopLoader color="#16A34A" height={3} showSpinner={false} />
+            {children}
+          </ProtectedRoute>
         </ClientRoot>
       </body>
     </html>

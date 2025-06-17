@@ -9,6 +9,7 @@ import CreateCampaign from "@/components/campaign-creation/Dialouges";
 import { favoriteCampaign, getFavouriteCampaigns } from "@/api/campaign/api";
 import { Campaign } from "@/types/campaign";
 import { useRouter } from "next/navigation";
+import { getApplicants } from "@/api/cv/api";
 
 export default function   Favourite() {
   const router = useRouter();
@@ -17,11 +18,30 @@ export default function   Favourite() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [applicantsCount, setApplicantsCount] = useState<Record<string, number>>({});
 
   const fetchCampaigns = () => {
     setIsLoading(true);
     getFavouriteCampaigns(true)
-      .then(setCampaigns)
+      .then(async (campaigns) => {
+        setCampaigns(campaigns);
+        // Fetch applicants for each campaign
+        const counts: Record<string, number> = {};
+        await Promise.all(
+          campaigns.map(async (campaign) => {
+            if (campaign.id) {
+              try {
+                const applicants = await getApplicants(campaign.id);
+                counts[campaign.id] = applicants.length;
+              } catch (error) {
+                console.error(`Error fetching applicants for campaign ${campaign.id}:`, error);
+                counts[campaign.id] = 0;
+              }
+            }
+          })
+        );
+        setApplicantsCount(counts);
+      })
       .catch(console.error)
       .finally(() => setIsLoading(false));
   };
@@ -83,7 +103,7 @@ export default function   Favourite() {
                       title={campaign.name}
                       status={status}
                       username={campaign.company_name}
-                      count={141}
+                      count={applicantsCount[campaign.id || ''] || 0}
                       isFavorite={campaign.is_favorite}
                       onClick={() => router.push(`/campaign/${campaign.id}`)}
                       onFavorite={async () => {

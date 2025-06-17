@@ -1,10 +1,11 @@
 import CampaignPage from "@/components/campaign/campaign";
 import React from "react";
 
-export default function Compaign({ params }: { params: { id: string } }) {
+export default async function Compaign({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   return (
     <div>
-      <CampaignPage id={params.id} />
+      <CampaignPage id={id} />
     </div>
   );
 }
