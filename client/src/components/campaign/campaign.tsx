@@ -51,6 +51,7 @@ export default function CampaignPage({ id }: CampaignPageProps) {
   const [showArchiveDialog, setShowArchiveDialog] = useState(false);
   const [isArchiving, setIsArchiving] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -111,6 +112,7 @@ export default function CampaignPage({ id }: CampaignPageProps) {
     const updated = await getCampaign(campaign.id);
     setCampaign(updated);
     setEditDialogOpen(false);
+    setRefreshKey((k) => k + 1);
   };
 
   const handleCopyLink = () => {
@@ -204,7 +206,7 @@ export default function CampaignPage({ id }: CampaignPageProps) {
                       />
                     </button>
                     <button
-                      className="px-4 py-2 bg-blue-600 hover:cursor-pointer text-white rounded-md hover:bg-blue-700 font-medium flex items-center gap-2"
+                      className="px-4 py-2 bg-blue-600 ho text-white rounded-md hover:bg-blue-700 font-medium flex items-center gap-2"
                       onClick={handleCopyLink}
                     >
                       Share
@@ -243,6 +245,7 @@ export default function CampaignPage({ id }: CampaignPageProps) {
                   {/* Best Candidates */}
                   <BestCandidates
                     campaignId={campaign?.id}
+                    refreshKey={refreshKey}
                     onLoadMore={() => {
                       // Handle load more candidates
                       console.log("Load more candidates");
